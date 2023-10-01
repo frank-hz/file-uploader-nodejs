@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Uploader Nodejs</title>
+    <link rel="stylesheet" href="font/BDO Grotesk/style.css">
+    <link rel="stylesheet" href="font/lineicons 4.0/css/icons.css">
+    <link rel="stylesheet" href="css/template.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <a href="" class="logo">
+                FILE<span>UPLOADER</span>
+            </a>
+            <select id="" class="translate-drop">
+                <option value="ES">Español</option>
+                <option value="EN">English</option>
+            </select>
+        </div>
+        <div class="upload-area">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Sube tus archivos</div>
+                </div>
+                <div class="card-body">
+                    <input id="file-input" name="file" type="file" hidden multiple>
+                    <div id="drop-container" class="upload-container">
+                        <div class="upload-icon">
+                            <i class="lni lni-upload"></i>
+                        </div>
+                        <span class="upload-title">
+                            Arrastra y Suelta o Selecciona el archivo
+                        </span>
+                        <span class="upload-subtitle">
+                            Imagen o Texto
+                        </span>
+                    </div>
+                    <div id="preview_area"></div>
+                    <div id="progress-list" class="upload-progress-list">
+                        <div class="progress-item-blank">Sin archivos</div>
+                        <!-- <div class="progress-item">
+                            <div class="progress-bar"></div>
+                            <div class="progress-item-data">
+                                Finanzas Corporativas Ross 8th.pdf 
+                                <span class="progress-tag file-pdf">
+                                    PDF
+                                </span>
+                            </div>
+                            <div class="progress-item-controls">
+                                <a href="" class="progress-item-button button-text-danger">
+                                    <i class="lni lni-close"></i>
+                                </a>
+                            </div>
+                        </div>                        
+                        <div class="progress-item">
+                            <div class="progress-bar"></div>
+                            <div class="progress-item-data">
+                                DS-166-2019-EF_Anexo4_175887.xlsx 
+                                <span class="progress-tag file-xlsx">
+                                    .xlsx
+                                </span>
+                            </div>
+                            <div class="progress-item-controls">
+                                <a href="" class="progress-item-button button-text-danger">
+                                    <i class="lni lni-close"></i>
+                                </a>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button id="save-btn" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="storage-area">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Almacenamiento Actual</div>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary" id="scan-button">Escanear Archivos</button>
+                    <div class="card-table">
+                        <table class="file-table">
+                            <div id="table_loading" class="file-table-loading loading-up">
+                                <div class="d-flex justify-center">
+                                    Cargando&nbsp;
+                                    <div class="spinner"></div>
+                                </div>
+                            </div>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Tamaño</th>
+                                    <th>Fecha Modificacion</th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storage-dataset">
+                                <tr>
+                                    <td colspan="5">Archivos no encontrados.</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td>Finanzas Corporativas Ross 8th</td>
+                                    <td>
+                                        <div class="file-tag file-pdf">
+                                            PDF
+                                        </div>
+                                    </td>
+                                    <td>1.25MB</td>
+                                    <td>24/09/2023</td>
+                                    <td>
+                                        <button class="file-btn btn-red">
+                                            <i class="lni lni-cross-circle"></i>
+                                            Remove
+                                        </button>
+                                        <button class="file-btn btn-purple">
+                                            <i class="lni lni-download"></i>
+                                            Download
+                                        </button>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- <script src="js/tailwind.js"></script>
+    <script src="js/flowbite.js"></script>
+    <script type="module">
+        tailwind.config = {
+          darkMode: ''
+        }
+    </script> -->
+    <script src="js/uploader.js"></script>
+</body>
+</html>
