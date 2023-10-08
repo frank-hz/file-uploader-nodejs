@@ -7,20 +7,20 @@ Subida y Almacenamiento de Archivos.
 <p align="center">
   <a href="#paquetes-usados">Paquetes Usados</a> •
   <a href="#descripcion-de-funcionalidad">Descripcion</a> •
-  <a href="#how-to-use">How To Use</a> •
   <a href="#autor">Autor</a>
 </p>
 
 ### Paquetes Usados
 - [Express](https://expressjs.com)
+- Express-fileupload
 - [Ejs](https://ejs.co)
 
 
-### Descripcion de Funcionalidad
-- <b>Carga de Archivos: </b> permite subir archivos mediante seleccion o el uso del evento arrastrar y soltar(Drag and Drop).
-- <b>Validacion de Archivos: </b> verifica que el tipo de archivo sea permitido para poder continuar con el proceso de almacenamiento.
-- <b>Almacenamiento: </b>guarda los archivos cargados y validados.
-- <b>Administracion de Archivos: </b> permite la visualizacion de archivos almacenados asi como la edicion y eliminacion de los mismos.
+### Funciones
+- Subir Archivo
+- Listar Archivos
+- Eliminar Archivo
+- Descargar Archivo
 
 
 ### Como Usar

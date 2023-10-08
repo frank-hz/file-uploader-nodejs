@@ -18,21 +18,38 @@ router.get('/files-get-all', async (req,res) => {
             'ext': path.extname(file),
             'size_rps': convertBytes( fs.statSync(dirpath + file).size ),
             'updated': fs.statSync(dirpath + file).mtime,
-            'url': dirpath+file
+            'url': `download?n=${file}`
         });
     });
     res.json(data_dir);
 });
 
-router.post('/file-upload', (req,res) => {
+router.post('/file-upload', async (req,res) => {
     let file = req.files.filex;
     let storagePath = __dirname + '/storage/' + file.name;
-    
+    if (fs.existsSync(storagePath)) {
+        res.json({'error': 'el archivo ya existe'});
+        return;
+    }    
     file.mv(storagePath, (err) => {
         if (err) return res.status(500).json({'error': err});
-        res.json({'message': 'Archivo guardado'});
+        res.json({'ok': 'archivo guardado'});
     });
 });
+
+router.delete('/file-remove', (req,res)=>{
+    let name = req.body.name;
+    fs.unlinkSync(__dirname + '/storage/'+name);
+    res.json({'ok': 'archivo removido'});
+});
+
+router.get('/download', (req,res)=>{
+    let name = req.query.n;
+    let file = `${__dirname}/storage/${name}`;
+    res.download(file);
+});
+
+
 
 function convertBytes(bytes, decimals = 2) {
     if (!+bytes) return '0 Bytes';

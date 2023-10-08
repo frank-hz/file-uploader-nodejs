@@ -9,20 +9,26 @@
     <link rel="stylesheet" href="css/template.css">
 </head>
 <body>
+    <div class="toast">
+        Message Alert
+    </div>
     <div class="wrapper">
         <div class="header">
             <a href="" class="logo">
                 FILE<span>UPLOADER</span>
             </a>
-            <select id="" class="translate-drop">
+            <!-- <select id="" class="translate-drop">
                 <option value="ES">Español</option>
                 <option value="EN">English</option>
-            </select>
+            </select> -->
         </div>
         <div class="upload-area">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Sube tus archivos</div>
+                </div>
+                <div id="form-log" class="card-log">
+                    0 items
                 </div>
                 <div class="card-body">
                     <input id="file-input" name="file" type="file" hidden multiple>

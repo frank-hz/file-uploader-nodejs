@@ -1,20 +1,16 @@
 (function(d,w){
     let table_loader;
-    let ScanButton, FileInput, DropContainer, SaveButton;
+    let ScanButton, FileInput, DropContainer, SaveButton, FormLog, ProgressList;
     let FileStash = [];
-
-    // PENDIENTE
-    // Verificacion de duplicidad/sobrescritura
-    // Eliminacion
-    // Descarga
-    // Formato de Fecha
-    // 
 
     d.addEventListener('DOMContentLoaded', ()=>{
         ScanButton = d.getElementById('scan-button');
         FileInput = d.getElementById('file-input');
         DropContainer = d.getElementById('drop-container');
         SaveButton = d.getElementById('save-btn');
+        ProgressList = d.getElementById('progress-list');
+        FormLog = d.getElementById('form-log');
+        
 
         table_loader = d.getElementById('table_loading');
         FilesRenderList();   
@@ -28,8 +24,14 @@
             FileInput.click();
         });
         FileInput.addEventListener('change', function(){
-            let files = this.files;
-            FileProcess(files[0]);
+            let files_ = this.files;
+            if (files_.length === undefined) {
+                FileProcess(files_);
+            }else {
+                for (const file of files_) {
+                    FileProcess(file);
+                }
+            }
         }, false);
         DropContainer.addEventListener('dragover', event => {
             event.preventDefault();
@@ -44,6 +46,7 @@
         DropContainer.addEventListener('drop', event => {
             event.preventDefault();
             let files_ = event.dataTransfer.files;
+            
             if (files_.length === undefined) {
                 FileProcess(files_);
             }else {
@@ -54,15 +57,44 @@
             DropContainer.classList.remove('actived'); 
             
         });
-        SaveButton.addEventListener('click', event => {
-            if (FileStash.length > 0) {
-                FileStash.forEach(async e => {                    
-                    await FileUpload(e.id, e.file);
-                });
-                FilesRenderList();   
-            }
+        SaveButton.addEventListener('click', async event => {
+            if (FileStash.length > 0){       
+                let FileResiduary = [];       
+                for (let j = 0; j < FileStash.length; j++) {
+                    if (await FileUpload(FileStash[j].id, FileStash[j].file)) {
+                        await new Promise((resolve,reject) => {
+                            FileStash[j].status = 'ok';
+                            FileProgressUpdate(FileStash[j].id,{
+                                update: true, progress: 100
+                            });
+                            setTimeout(() => {
+                                FileProgressUpdate(FileStash[j].id, {remove: true});       
+                                resolve();                    
+                            }, 300);
+                        })                            
+                        
+                    }else {
+                        FileResiduary.push(FileStash[j]);
+                        FileProgressUpdate(FileStash[j].id,{
+                            update: true,
+                            error: true,
+                            progress: 0
+                        });
+                    }                     
+                }
+                FileStash = FileResiduary;
+                FormLog.innerHTML = FileStash.length+' items'; 
+                FilesRenderList();
+            }            
         });
     });
+    d.addEventListener('click', event => {
+        if (event.target.matches('[name=delete-item]')){
+            if (confirm('¿remover archivo?')){
+                FileRemove(event.target.dataset.name);
+            }
+        }
+    })
 
     async function FilesRenderList(){
         try {
@@ -86,9 +118,9 @@
                                 <span class="file-tag file-${ e.ext.replace(".","")}">${e.ext}</span>
                             </td>
                             <td>${e.size_rps}</td>
-                            <td>${ format(new Date(e.updated)) }</td>
+                            <td>${ dateFormat(new Date(e.updated)) }</td>
                             <td>
-                                <button class="file-btn btn-red">
+                                <button name="delete-item" class="file-btn btn-red" data-name="${e.name}">
                                     <i class="lni lni-cross-circle"></i>
                                     Remove
                                 </button>
@@ -111,13 +143,13 @@
     }
     function FileProcess(file){
         let ext = file.name.split('.').pop();
-        const ExtFilter = ['jpeg','jpg','png','txt','svg','gif','doc','xlsl'];
+        const ExtFilter = ['jpeg','jpg','png','txt','svg','gif','doc','xlsl','svg'];
         if (!ExtFilter.includes(ext)) {
             console.log(`${file.name} is not valid.`);
             return;
         }
         const id = `file-${Math.random().toString(32).substring(7)}`;
-        FileCreatePreview(id, {
+        FileProgressCreate(id,{
             name: file.name,
             type: file.type,
             ext: ext
@@ -126,17 +158,18 @@
             id: id,
             file: file
         });
-        
+        FormLog.innerHTML = FileStash.length+' items';        
     }    
-    function FileCreatePreview(id, file){
+    function FileProgressCreate(id, file){
         let item_html = `
             <div id="${id}" class="progress-item">
-                <div id="progress_${id}" class="progress-bar"></div>
+                <div class="progress-bar"></div>
                 <div class="progress-item-data">
                     ${file.name.slice(0, 35) + (file.name.length > 35 ? "..." : "")} 
                     <span class="progress-tag file-${file.ext}">
                         ${file.ext}
                     </span>
+                    <div class="progress-item-log"></div>
                 </div>
                 <div class="progress-item-controls">
                     <a href="" class="progress-item-button button-text-danger">
@@ -145,45 +178,66 @@
                 </div>
             </div>
         `; 
-        d.getElementById('progress-list').innerHTML += item_html;
+        ProgressList.innerHTML += item_html;
     }
-    function FileSetProgress(id, porcentual){
+    function FileProgressUpdate(id, st = {}){
         try {
-            let progress = d.getElementById(`progress_${id}`);
-            console.log(progress)
-            progress.classList.add(`wp-${porcentual}`);
+            if (!id || id == undefined) return;            
+            let item = d.getElementById(id);
+            let progress = item.querySelector('.progress-bar');
+            let log = item.querySelector('.progress-item-log');
+            log.innerHTML = '';
 
+            if (st.update) progress.style.width = `${st.progress}%`;
+            if (st.remove) item.remove();
+            if (st.error) log.innerHTML = 'error';
         } catch (error) {
-            
+            console.log('[error] '+error.message);
         }
     }
     async function FileUpload(id, file){
         try {
-            FileSetProgress(id, 30);
+            FileProgressUpdate(id, {update: true, progress: 30});
             let data = new FormData();
             data.append('filex', file);
 
             let send = await fetch('http://localhost:3000/file-upload', {
                 method: 'POST',
                 body: data
-            });
-            setTimeout(() => {
-                FileSetProgress(id, 100);
-            }, 300);
-            let response = await send.json();
+            });            
+            FileProgressUpdate(id, {update: true, progress: 70});
+            let res = await send.json(); 
+            return res.ok ? res.ok : false;
 
-            console.log(response);
+            // 4Test
+            // let rnd = Math.floor(Math.random() * 11);
+            // return (rnd%2==0) ? true : false;
         } catch (error) {
-            console.log('Error: '+error.message);
-            if (id) FileSetProgress(id, 0);
+            console.log('[error] '+error.message);            
+            return;
         }
     }
-
-    function format (date) {  
-        if (!(date instanceof Date)) {
-          throw new Error('Invalid "date" argument. You must pass a date instance')
+    async function FileRemove(name){
+        try {
+            let data = new FormData();
+            data.append('name',name);
+            let remove = await fetch('http://localhost:3000/file-remove', {
+                method: 'DELETE',
+                body: data
+            });
+            let resp = await remove.json();
+            if (resp.ok){
+                alert(resp.ok);
+                FilesRenderList();
+            }
+        } catch (error) {
+            console.log(error.message);
         }
-      
+    }
+    function dateFormat (date) {  
+        if (!(date instanceof Date)) {
+          throw new Error('fecha invalida');
+        }      
         const year = date.getFullYear()
         const month = String(date.getMonth() + 1).padStart(2, '0')
         const day = String(date.getDate()).padStart(2, '0')

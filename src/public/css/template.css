@@ -31,6 +31,7 @@ body {
     height: 100vh;
     color: var(--font);
     background-color: var(--bg);
+    position: relative;
 }
 .wrapper {
     height: 100%;
@@ -133,14 +134,17 @@ body {
     position: absolute;
     bottom: 0px;
     width: 0%;
-    border: 1px solid var(--primary);
+    border: 3px solid var(--primary);
+    border-radius: 4px;
     transition: all .1s linear;
 }
-/* .progress-item:hover .progress-bar {
-    width: 80%;
-} */
 .progress-item-icon {
     /* grid-column: 1/2; */
+}
+.progress-item-log {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--danger);
 }
 .progress-item-data {
     display: block;
@@ -287,6 +291,15 @@ body {
 .card-title {
     font-size: 1rem;
     font-weight: 600;
+}
+.card-log {
+    padding: .1rem 1rem;
+    text-align: center;
+    display: block;
+    font-size: .9rem;
+    font-weight: 500;
+    letter-spacing: .5px;
+    color: #647290;
 }
 .card-body {
     padding: 1rem .5rem;
@@ -443,4 +456,18 @@ body {
 }
 .wp-100{
     width: 100% !important;
+}
+
+
+.toast {
+    position: absolute;
+    right: 1rem;
+    top: -10rem;
+    border: 1px solid var(--border-control);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    padding: .6rem .5rem;
+    background: #fff;
 }
