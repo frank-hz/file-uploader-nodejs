@@ -19,7 +19,7 @@
         ScanButton.addEventListener('click', event => {
             FilesRenderList();
         });
-        DropContainer.addEventListener('click', (event) => {
+        DropContainer.addEventListener('click', event => {
             let ev = event.target;
             FileInput.click();
         });
@@ -207,7 +207,7 @@
             });            
             FileProgressUpdate(id, {update: true, progress: 70});
             let res = await send.json(); 
-            return res.ok ? res.ok : false;
+            return res.ok;
 
             // 4Test
             // let rnd = Math.floor(Math.random() * 11);
