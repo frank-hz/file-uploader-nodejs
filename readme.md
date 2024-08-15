@@ -1,29 +1,32 @@
 # File Uploader in NodeJs
+
+<br>
+<p style="text-align:center"><img src="https://raw.githubusercontent.com/frank-hz/file-uploader-nodejs/main/src/preview.png" width="700"></p>
+
 File Upload and Storage.<br>
 Subida y Almacenamiento de Archivos.
 
-## Inicio
+## Contenido
+* [Paquetes Usados](#Paquetes_Usados)
+* [Tecnologias](#tecnologias)
+* [Funcionalidad](#funcionalidad)
+* [Setup](#setup)
+* [Autor](#autor)
 
-<p align="center">
-  <a href="#paquetes-usados">Paquetes Usados</a> •
-  <a href="#descripcion-de-funcionalidad">Descripcion</a> •
-  <a href="#autor">Autor</a>
-</p>
-
-### Paquetes Usados
+### Tecnologias
 - [Express](https://expressjs.com)
 - Express-fileupload
 - [Ejs](https://ejs.co)
 
 
-### Funciones
+### Funcionalidad
 - Subir Archivo
 - Listar Archivos
 - Eliminar Archivo
 - Descargar Archivo
 
 
-### Como Usar
+### Setup
 ```bash
 # Clonar el repositorio
 $ git clone https://github.com/frank-hz/file-uploader-nodejs
